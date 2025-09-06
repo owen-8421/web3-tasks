@@ -6,6 +6,7 @@ import (
 	"blog/internal/pkg/config"
 	"blog/internal/pkg/db"
 	"blog/internal/pkg/jwt"
+	"blog/internal/pkg/logger"
 	"blog/internal/repository"
 	"blog/internal/service"
 	"fmt"
@@ -15,6 +16,8 @@ import (
 func main() {
 	// 1. 加载配置
 	config.InitConfig("setting.yaml")
+
+	logger.InitLogger(false)
 
 	// 2. 初始化数据库
 	err := db.InitDB()

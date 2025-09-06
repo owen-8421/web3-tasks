@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"blog/handlers" // 导入 handlers 以使用 Claims 结构体
+	jwt2 "blog/internal/pkg/jwt" // 导入 handlers 以使用 Claims 结构体
 	"fmt"
 	"net/http"
 
@@ -21,7 +21,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		jwtKey := []byte(viper.GetString("jwt.secret"))
-		token, err := jwt.ParseWithClaims(tokenString, &handlers.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenString, &jwt2.Claims{}, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("非预期的签名方法: %v", token.Header["alg"])
 			}
@@ -34,7 +34,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if claims, ok := token.Claims.(*handlers.Claims); ok {
+		if claims, ok := token.Claims.(*jwt2.Claims); ok {
 			// 将从token中解析出的用户信息存入context，以便后续处理器使用
 			c.Set("userID", claims.UserID)
 			c.Next()
