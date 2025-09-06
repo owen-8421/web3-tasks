@@ -2,6 +2,7 @@ package database
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -120,23 +121,23 @@ func (*SqlLite) Open(dbType string, conn string) (db *gorm.DB, err error) {
 }
 
 // GetDataBase TODO
-func GetDataBase(key string) *MysqlDB {
+func GetDataBase(key string) (*MysqlDB, error) {
 	tmp, ok := Databases[key]
 	if !ok {
-		panic(fmt.Sprintf("No Key %s DataBase Exist.", key))
+		return nil, errors.New(fmt.Sprintf("No Key %s DataBase Exist.", key))
 	}
-	return tmp
+	return tmp, nil
 }
 
 // GetDB TODO
-func GetDB(connKey string) *gorm.DB {
-	database := GetDataBase(connKey)
+func GetDB(connKey string) (*gorm.DB, error) {
+	database, err := GetDataBase(connKey)
 	if database.DB == nil {
 		database.Once.Do(func() {
-			database.initDB()
+			err = database.initDB()
 		})
 	}
-	return database.DB
+	return database.DB, err
 }
 
 // SourceName TODO
@@ -151,12 +152,12 @@ func (p *MysqlDB) SourceName() string {
 	)
 }
 
-func (p *MysqlDB) initDB() {
+func (p *MysqlDB) initDB() error {
 	var err error
 	p.DB, err = gorm.Open("mysql", p.SourceName())
 	if err != nil {
 		log.Printf("Open db failed: %v", err.Error())
-		panic(err)
+		return err
 	}
 
 	sqlDb := p.DB.DB()
@@ -166,4 +167,5 @@ func (p *MysqlDB) initDB() {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDb.SetConnMaxLifetime(time.Hour)
 	p.DB.LogMode(true)
+	return nil
 }
