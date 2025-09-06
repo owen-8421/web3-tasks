@@ -44,7 +44,7 @@ func (s *StudentService) TblName() string {
 // INSERT INTO students (name, age, grade) VALUES ('张三', 20, '三年级');
 // UPDATE students SET grade = '四年级' WHERE name = '张三';
 func (s *StudentService) Upsert(student *Students, name string) error {
-	myDB := database.GetDB("local")
+	myDB, _ := database.GetDB("local")
 	var tmp Students
 	err := myDB.Where("name = ?", name).
 		Find(&tmp).Error
@@ -63,14 +63,15 @@ func (s *StudentService) Upsert(student *Students, name string) error {
 
 func (s *StudentService) Select(minAge int) ([]*Students, error) {
 	// SELECT * FROM students WHERE age > 18;
-	myDB := database.GetDB("local")
+	myDB, err := database.GetDB("local")
 	var res []*Students
-	err := myDB.Where("age > ?", minAge).Select("*").Find(&res).Error
+	err = myDB.Where("age > ?", minAge).Select("*").Find(&res).Error
 	return res, err
 }
 
 func (s *StudentService) Delete(maxAge int) error {
 	// DELETE FROM students WHERE age < 15;
-	err := database.GetDB("local").Where("age > ?", maxAge).Delete("*").Error
+	myDB, _ := database.GetDB("local")
+	err := myDB.Where("age > ?", maxAge).Delete("*").Error
 	return err
 }
