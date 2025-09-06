@@ -1,7 +1,6 @@
 package task3
 
 import (
-	"leetcode/database"
 	"log"
 )
 
@@ -44,7 +43,7 @@ func (s *StudentService) TblName() string {
 // INSERT INTO students (name, age, grade) VALUES ('张三', 20, '三年级');
 // UPDATE students SET grade = '四年级' WHERE name = '张三';
 func (s *StudentService) Upsert(student *Students, name string) error {
-	myDB, _ := database.GetDB("local")
+	myDB, _ := GetDB("local")
 	var tmp Students
 	err := myDB.Where("name = ?", name).
 		Find(&tmp).Error
@@ -63,7 +62,7 @@ func (s *StudentService) Upsert(student *Students, name string) error {
 
 func (s *StudentService) Select(minAge int) ([]*Students, error) {
 	// SELECT * FROM students WHERE age > 18;
-	myDB, err := database.GetDB("local")
+	myDB, err := GetDB("local")
 	var res []*Students
 	err = myDB.Where("age > ?", minAge).Select("*").Find(&res).Error
 	return res, err
@@ -71,7 +70,7 @@ func (s *StudentService) Select(minAge int) ([]*Students, error) {
 
 func (s *StudentService) Delete(maxAge int) error {
 	// DELETE FROM students WHERE age < 15;
-	myDB, _ := database.GetDB("local")
+	myDB, _ := GetDB("local")
 	err := myDB.Where("age > ?", maxAge).Delete("*").Error
 	return err
 }

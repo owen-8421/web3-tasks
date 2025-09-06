@@ -1,0 +1,28 @@
+settings:
+  application:
+    host: 127.0.0.1
+    mode: test
+    name: blog
+    port: 9080
+    readtimeout: 1
+    writertimeout: 2
+  databases:
+    # 第一个数据库：主数据库 (MySQL)
+    primary:
+      type: "mysql"
+      # DSN 格式: user:password@tcp(host:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: "root:123456@tcp(127.0.0.1:3306)/blog_primary_db?charset=utf8mb4&parseTime=True&loc=Local"
+
+    # 第二个数据库：只读副本 (MySQL)
+    readonly:
+      type: "mysql"
+      dsn: "root:123456@tcp(127.0.0.1:3306)/blog_primary_db?charset=utf8mb4&parseTime=True&loc=Local"
+  log:
+    dir: ./log
+  jwt:
+    secret: super-secret-key
+    timeout: 3600
+    issuer: "personal-blog"
+    expire_hours: 24
+
+

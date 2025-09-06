@@ -1,4 +1,4 @@
-package database
+package task3
 
 import (
 	"bytes"
