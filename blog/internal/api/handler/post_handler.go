@@ -78,7 +78,6 @@ func (h *PostHandler) GetAll(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	response.Success(c, posts)
 }
 
@@ -89,15 +88,12 @@ func (h *PostHandler) Update(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "Invalid post ID")
 		return
 	}
-
 	var req UpdatePostRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, "Invalid request parameters")
 		return
 	}
-
 	userID := c.MustGet("userID").(uint)
-
 	post, err := h.postService.UpdatePost(uint(id), userID, req.Title, req.Content)
 	if err != nil {
 		if err.Error() == "permission denied: you are not the author of this post" {
@@ -111,7 +107,6 @@ func (h *PostHandler) Update(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	response.Success(c, post)
 }
 
@@ -138,6 +133,5 @@ func (h *PostHandler) Delete(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	response.Success(c, gin.H{"message": "Post deleted successfully"})
 }

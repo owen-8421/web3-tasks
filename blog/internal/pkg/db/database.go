@@ -1,11 +1,9 @@
 package db
 
 import (
-	"errors"
 	"fmt"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
@@ -19,7 +17,8 @@ import (
 var Dbs map[string]*gorm.DB
 
 // InitDB --- 数据库初始化, 在main函数中只执行一次
-func InitDB() error {
+func InitDB() {
+
 	// 步骤2：初始化全局的数据库连接map
 	Dbs = make(map[string]*gorm.DB)
 
@@ -34,18 +33,29 @@ func InitDB() error {
 	)
 
 	// 步骤4：从Viper获取 "databases" 配置块
-	databases := viper.GetStringMap("databases")
+	databases := viper.GetStringMap("settings.databases")
+	log.Println("InitDB")
 	if len(databases) == 0 {
 		log.Fatal("错误: 未在 'setting.yaml' 中找到 'databases' 配置项。")
-		return errors.New("错误: 未在 'setting.yaml' 中找到 'databases' 配置项。")
 	}
 
+	log.Println(databases)
+
 	// 步骤5：遍历配置文件中定义的所有数据库，并为每一个创建连接
-	for name := range databases {
+	for name, value := range databases {
 		// 获取当前数据库的详细配置
-		dbConfig := viper.Sub("databases." + name)
-		dsn := dbConfig.GetString("dsn")
-		dbType := dbConfig.GetString("type")
+		log.Println("name:" + name)
+		dbConfig, ok := value.(map[string]interface{})
+
+		if !ok {
+			fmt.Printf("Error: Value for key '%s' is not a valid map.\n", name)
+			continue
+		}
+
+		log.Println(dbConfig)
+
+		dsn := dbConfig["dsn"].(string)
+		dbType := dbConfig["type"].(string)
 
 		// 校验配置是否存在
 		if dsn == "" {
@@ -55,40 +65,57 @@ func InitDB() error {
 			log.Fatalf("错误: 数据库 '%s' 的 'type' 未配置。", name)
 		}
 
-		// 根据配置的类型选择合适的GORM驱动
-		var dialector gorm.Dialector
-		switch dbType {
-		case "sqlite":
-			dialector = sqlite.Open(dsn)
-		case "mysql":
-			// 如果要用MySQL，取消这里的注释并导入MySQL驱动
-			dialector = mysql.Open(dsn)
-		default:
-			return errors.New(fmt.Sprintf("错误: 不支持的数据库类型 '%s'", dbType))
+		log.Printf("dsn: %s, dbtype: %s", dsn, dbType)
+
+		if dbType != "mysql" {
+			log.Printf("dbtype: %s invalid", dbType)
+			continue
 		}
 
-		// 使用选定的驱动和配置打开数据库连接
-		db, err := gorm.Open(dialector, &gorm.Config{
-			Logger: newLogger,
-		})
+		db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: newLogger})
+
 		if err != nil {
-			return errors.New(fmt.Sprintf("错误：无法连接到数据库 '%s': %v", name, err))
+			log.Fatalf(fmt.Sprintf("错误：无法连接到数据库 '%s': %v", name, err))
 		}
 
 		log.Printf("数据库 '%s' 连接成功！", name)
-		// 将创建好的连接存入全局map中
-		Dbs[name] = db
-		primaryDB, ok := Dbs["primary"]
-		if !ok {
-			log.Fatal("错误: 未找到名为 'primary' 的主数据库配置用于迁移。")
-		}
 
-		log.Println("正在 'primary' 数据库上执行自动迁移...")
-		err = primaryDB.AutoMigrate(&model.User{}, &model.Post{}, &model.Comment{})
-		if err != nil {
-			log.Fatalf("错误：'primary' 数据库迁移失败: %v", err)
-		}
-		log.Println("数据库迁移成功！")
+		sqlDb, err := db.DB()
+		sqlDb.SetMaxOpenConns(1000)
+		// SetMaxIdleConns 设置最大的可空闲连接数
+		sqlDb.SetMaxIdleConns(300)
+		// SetConnMaxLifetime 设置了连接可复用的最大时间。
+		sqlDb.SetConnMaxLifetime(time.Hour)
+		Dbs[name] = db
 	}
-	return nil
+
+	primaryDB, ok := Dbs["primary"]
+	if !ok {
+		log.Fatal("错误: 未找到名为 'primary' 的主数据库配置用于迁移。")
+	}
+
+	log.Println("正在 'primary' 数据库上执行自动迁移...")
+	err := primaryDB.AutoMigrate(&model.User{}, &model.Post{}, &model.Comment{})
+	if err != nil {
+		log.Fatalf("错误：'primary' 数据库迁移失败: %v", err)
+	}
+	log.Println("数据库迁移成功！")
+}
+
+// CloseDBs 关闭所有已初始化的数据库连接
+func CloseDBs() {
+	log.Println("正在关闭所有数据库连接...")
+	for name, dbInstance := range Dbs {
+		sqlDB, err := dbInstance.DB()
+		if err != nil {
+			log.Printf("错误：无法获取 '%s' 数据库的底层连接: %v", name, err)
+			continue
+		}
+		if err := sqlDB.Close(); err != nil {
+			log.Printf("错误：关闭 '%s' 数据库连接失败: %v", name, err)
+		} else {
+			log.Printf("数据库 '%s' 连接已成功关闭。", name)
+		}
+	}
+	log.Println("所有数据库连接均已关闭。")
 }
