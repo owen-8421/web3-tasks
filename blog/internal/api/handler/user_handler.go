@@ -18,6 +18,7 @@ func NewUserHandler(svc *service.UserService) *UserHandler {
 type UserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
@@ -27,11 +28,10 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 
-	if err := h.userService.Register(req.Username, req.Password); err != nil {
+	if err := h.userService.Register(req.Username, req.Password, req.Email); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	response.Success(c, nil)
 }
 

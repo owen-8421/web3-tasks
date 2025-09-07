@@ -62,8 +62,11 @@ func main() {
 
 func startServer(router http.Handler) {
 	// 创建 HTTP 服务器实例
+	port := viper.GetString("settings.application.port")
+	ip := viper.GetString("settings.application.host")
+
 	srv := &http.Server{
-		Addr:    viper.GetString("server.port"),
+		Addr:    fmt.Sprintf("%s:%s", ip, port),
 		Handler: router,
 	}
 

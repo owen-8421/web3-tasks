@@ -22,7 +22,7 @@ func NewUserService(repo *repository.UserRepository, issuer string, expire int) 
 	}
 }
 
-func (s *UserService) Register(username, password string) error {
+func (s *UserService) Register(username, password, email string) error {
 	// 检查用户是否已存在
 	_, err := s.userRepo.FindByUsername(username)
 	if err == nil {
@@ -33,7 +33,7 @@ func (s *UserService) Register(username, password string) error {
 	}
 
 	// 创建用户
-	user := &model.User{Username: username}
+	user := &model.User{Username: username, Email: email}
 	if err := user.SetPassword(password); err != nil {
 		return err
 	}

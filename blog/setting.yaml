@@ -17,12 +17,13 @@ settings:
     readonly:
       type: "mysql"
       dsn: "root:123456@tcp(127.0.0.1:3306)/blog_primary_db?charset=utf8mb4&parseTime=True&loc=Local"
-  log:
-    dir: ./log
-  jwt:
-    secret: super-secret-key
-    timeout: 3600
-    issuer: "personal-blog"
-    expire_hours: 24
+log:
+  dir: ./log
+jwt:
+  secret: super-secret-key
+  timeout: 3600
+  issuer: "personal-blog"
+  expire_hours: 24
+
 
 
