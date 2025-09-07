@@ -1,0 +1,204 @@
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/register \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123"}'
+{"code":0,"data":null,"msg":"success"}%                                                           oweoweoweowowoooooooooowen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123"}'
+{"code":0,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyMzgyfQ.4xx-RckxJ6_8KVUrLty2XHqcnaO8qsX_iHYck3kMSqY"},"msg":"success"}%                                          owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "wrongpassword"}'
+{"code":401,"data":null,"msg":"user not found or invalid credentials"}%                                                 owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-d '{"title": "My Secret Post", "content": "This should not work."}'
+{"code":401,"data":null,"msg":"Authorization header is missing"}%                                                       owen@owendeMacBook-Pro blog % TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyMzgyfQ.4xx-RckxJ6_8KVUrLty2XHqcnaO8qsX_iHYck3kMSqY"
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % echo $TOKEN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyMzgyfQ.4xx-RckxJ6_8KVUrLty2XHqcnaO8qsX_iHYck3kMSqY
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"title": "My First Post", "content": "This is content created by an authenticated user."}'
+{"code":401,"data":null,"msg":"Invalid token"}%                                                                         owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyMzgyfQ.4xx-RckxJ6_8KVUrLty2XHqcnaO8qsX_iHYck3kMSqY" \
+-d '{"title": "My First Post", "content": "This is content created by an authenticated user."}'
+{"code":401,"data":null,"msg":"Invalid token"}%                                                                                                                       owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123"}'
+{"code":0,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyNjE4fQ.55je1TWBlVrLpqIrUhXaP4MO7oBMte11Ka7yB8l_mFY"},"msg":"success"}%                                                                                                                                      owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyNjE4fQ.55je1TWBlVrLpqIrUhXaP4MO7oBMte11Ka7yB8l_mFY"
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % echo $TOKEN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzU3MjUyNjE4fQ.55je1TWBlVrLpqIrUhXaP4MO7oBMte11Ka7yB8l_mFY
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"title": "My First Post", "content": "This is content created by an authenticated user."}'
+{"code":401,"data":null,"msg":"Invalid token"}%                                                                                                                       owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123"}'
+{"code":400,"data":null,"msg":"Invalid request parameters"}%                                                                                                          owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123", "email":""}'
+{"code":400,"data":null,"msg":"Invalid request parameters"}%                                                                                                          owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "testuser", "password": "password123","email":"123@gmail.com"}'
+{"code":0,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTQ2M30.qqIZ3wzkhBorbqhclBpl1T7hhTL0k7KhNcDBlolEwPI"},"msg":"success"}%                                                                                                         owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTQ2M30.qqIZ3wzkhBorbqhclBpl1T7hhTL0k7KhNcDBlolEwPI"
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"title": "My First Post", "content": "This is content created by an authenticated user."}'
+{"code":0,"data":{"ID":1,"CreatedAt":"2025-09-07T21:51:35.986+08:00","UpdatedAt":"2025-09-07T21:51:35.986+08:00","DeletedAt":null,"Title":"My First Post","Content":"This is content created by an authenticated user.","UserID":1,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null},"msg":"success"}%                                                                  owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/register \
+-H "Content-Type: application/json" \
+-d '{"username": "anotheruser", "password": "password456"}'
+{"code":400,"data":null,"msg":"Invalid request parameters"}%                                                                                                          owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/register \
+-H "Content-Type: application/json" \
+-d '{"username": "anotheruser", "password": "password456","email":"123@gmail.com"}'
+{"code":500,"data":null,"msg":"Error 1062 (23000): Duplicate entry '' for key 'users.uni_users_email'"}%                                                              owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/register \
+-H "Content-Type: application/json" \
+-d '{"username": "anotheruser", "password": "password456","email":"123345@gmail.com"}'
+{"code":500,"data":null,"msg":"Error 1062 (23000): Duplicate entry '' for key 'users.uni_users_email'"}%                                                              owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/register \
+-H "Content-Type: application/json" \
+-d '{"username": "anotheruser", "password": "password456","email":"123345@gmail.com"}'
+{"code":0,"data":null,"msg":"success"}%                                                                                                                               owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/login \
+-H "Content-Type: application/json" \
+-d '{"username": "anotheruser", "password": "password456","email":"123345@gmail.com"}'
+{"code":0,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6ImFub3RoZXJ1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTg0OH0.rJaplApfQ_9I3wJzj2jhaRrcWTfmX7ll5xpZuCAgjUU"},"msg":"success"}%                                                                                                     owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % TOKEN2="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6ImFub3RoZXJ1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTg0OH0.rJaplApfQ_9I3wJzj2jhaRrcWTfmX7ll5xpZuCAgjUU"
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % echo $TOKEN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTQ2M30.qqIZ3wzkhBorbqhclBpl1T7hhTL0k7KhNcDBlolEwPI
+owen@owendeMacBook-Pro blog % echo $TOKEN2
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6ImFub3RoZXJ1c2VyIiwiaXNzIjoicGVyc29uYWwtYmxvZyIsImV4cCI6MTc1NzMzOTg0OH0.rJaplApfQ_9I3wJzj2jhaRrcWTfmX7ll5xpZuCAgjUU
+owen@owendeMacBook-Pro blog % # 使用用户A的Token创建文章
+curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN_AUTHOR" \
+-d '{"title": "我的第一篇文章", "content": "这是由authoruser创建的内容。"}'
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN2" \
+-d '{"title": "我的第一篇文章", "content": "这是由authoruser创建的内容。"}'
+{"code":0,"data":{"ID":2,"CreatedAt":"2025-09-07T21:58:37.174+08:00","UpdatedAt":"2025-09-07T21:58:37.174+08:00","DeletedAt":null,"Title":"我的第一篇文章","Content":"这是由authoruser创建的内容。","UserID":4,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null},"msg":"success"}%                                                                                      owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % export POST_ID=2
+owen@owendeMacBook-Pro blog % curl -X GET http://localhost:9080/api/v1/posts
+{"code":0,"data":[{"ID":2,"CreatedAt":"2025-09-07T21:58:37.174+08:00","UpdatedAt":"2025-09-07T21:58:37.174+08:00","DeletedAt":null,"Title":"我的第一篇文章","Content":"这是由authoruser创建的内容。","UserID":4,"User":{"ID":4,"CreatedAt":"2025-09-07T21:56:51.353+08:00","UpdatedAt":"2025-09-07T21:56:51.353+08:00","DeletedAt":null,"Username":"anotheruser","Password":"$2a$10$Opqi.UGRyuq97L4Kc/6pa.zxWTskQtm06BxGrb0vbh6eodQ3dAczy","Email":"123345@gmail.com","Posts":null,"Comments":null},"Comments":null},{"ID":1,"CreatedAt":"2025-09-07T21:51:35.986+08:00","UpdatedAt":"2025-09-07T21:51:35.986+08:00","DeletedAt":null,"Title":"My First Post","Content":"This is content created by an authenticated user.","UserID":1,"User":{"ID":1,"CreatedAt":"2025-09-07T21:29:23.546+08:00","UpdatedAt":"2025-09-07T21:29:23.546+08:00","DeletedAt":null,"Username":"testuser","Password":"$2a$10$irRcP6IjUBfJzmw.UUduW.IsPge32Wbb8jo472DrqV/d9Mhn2Po/6","Email":"","Posts":null,"Comments":null},"Comments":null}],"msg":"success"}%                                                                                                                                                               owen@owendeMacBook-Pro blog % curl -X GET http://localhost:9080/api/v1/posts/$POST_ID
+{"code":0,"data":{"ID":2,"CreatedAt":"2025-09-07T21:58:37.174+08:00","UpdatedAt":"2025-09-07T21:58:37.174+08:00","DeletedAt":null,"Title":"我的第一篇文章","Content":"这是由authoruser创建的内容。","UserID":4,"User":{"ID":4,"CreatedAt":"2025-09-07T21:56:51.353+08:00","UpdatedAt":"2025-09-07T21:56:51.353+08:00","DeletedAt":null,"Username":"anotheruser","Password":"$2a$10$Opqi.UGRyuq97L4Kc/6pa.zxWTskQtm06BxGrb0vbh6eodQ3dAczy","Email":"123345@gmail.com","Posts":null,"Comments":null},"Comments":[]},"msg":"success"}%                                                                                                                                                     owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X PUT http://localhost:9080/api/v1/posts/$POST_ID \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN2" \
+-d '{"title": "更新后的标题", "content": "内容也被更新了。"}'
+{"code":0,"data":{"ID":2,"CreatedAt":"2025-09-07T21:58:37.174+08:00","UpdatedAt":"2025-09-07T22:00:11.235+08:00","DeletedAt":null,"Title":"更新后的标题","Content":"内容也被更新了。","UserID":4,"User":{"ID":4,"CreatedAt":"2025-09-07T21:56:51.353+08:00","UpdatedAt":"2025-09-07T21:56:51.353+08:00","DeletedAt":null,"Username":"anotheruser","Password":"$2a$10$Opqi.UGRyuq97L4Kc/6pa.zxWTskQtm06BxGrb0vbh6eodQ3dAczy","Email":"123345@gmail.com","Posts":null,"Comments":null},"Comments":[]},"msg":"success"}%                                                                                                                                                                   owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X PUT http://localhost:9080/api/v1/posts/$POST_ID \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"title": "更新后的标题", "content": "内容也被更新了。"}'
+{"code":403,"data":null,"msg":"permission denied: you are not the author of this post"}%                                                                              owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X DELETE http://localhost:9080/api/v1/posts/$POST_ID \
+-H "Authorization: Bearer $TOKEN"
+{"code":403,"data":null,"msg":"permission denied: you are not the author of this post"}%                                                                              owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X DELETE http://localhost:9080/api/v1/posts/$POST_ID \
+-H "Authorization: Bearer $TOKEN2"
+{"code":0,"data":{"message":"Post deleted successfully"},"msg":"success"}%                                                                                            owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X GET http://localhost:9080/api/v1/posts/$POST_ID
+{"code":404,"data":null,"msg":"Post not found"}%                                                                                                                      owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN2" \
+-d '{"title": "我的第一篇文章", "content": "这是由authoruser创建的内容。"}'
+{"code":0,"data":{"ID":3,"CreatedAt":"2025-09-07T22:01:47.9+08:00","UpdatedAt":"2025-09-07T22:01:47.9+08:00","DeletedAt":null,"Title":"我的第一篇文章","Content":"这是由authoruser创建的内容。","UserID":4,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null},"msg":"success"}%                                                                                          owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"title": "用于评论测试的文章", "content": "等待大家的评论！"}'
+{"code":0,"data":{"ID":4,"CreatedAt":"2025-09-07T22:03:23.752+08:00","UpdatedAt":"2025-09-07T22:03:23.752+08:00","DeletedAt":null,"Title":"用于评论测试的文章","Content":"等待大家的评论！","UserID":1,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null},"msg":"success"}%                                                                                              owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % export POST_ID=4
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts/$POST_ID/comments \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN2" \
+-d '{"content": "这篇文章写得很棒，赞！"}'
+{"code":0,"data":{"ID":1,"CreatedAt":"2025-09-07T22:04:00.146+08:00","UpdatedAt":"2025-09-07T22:04:00.146+08:00","DeletedAt":null,"Content":"这篇文章写得很棒，赞！","UserID":4,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"PostID":4,"Post":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Title":"","Content":"","UserID":0,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null}},"msg":"success"}%                                                                                                                                 owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % export COMMENT_ID=1
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts/$POST_ID/comments \
+-H "Content-Type: application/json" \
+-d '{"content": "匿名评论，这不应该成功。"}'
+{"code":401,"data":null,"msg":"Authorization header is missing"}%                                                                                                     owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X POST http://localhost:9080/api/v1/posts/99999/comments \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN2" \
+-d '{"content": "文章去哪了？"}'
+{"code":404,"data":null,"msg":"post not found"}%                                                                                                                      owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog % curl -X GET http://localhost:9080/api/v1/posts/$POST_ID/comments
+{"code":0,"data":[{"ID":1,"CreatedAt":"2025-09-07T22:04:00.146+08:00","UpdatedAt":"2025-09-07T22:04:00.146+08:00","DeletedAt":null,"Content":"这篇文章写得很棒，赞！","UserID":4,"User":{"ID":4,"CreatedAt":"2025-09-07T21:56:51.353+08:00","UpdatedAt":"2025-09-07T21:56:51.353+08:00","DeletedAt":null,"Username":"anotheruser","Password":"$2a$10$Opqi.UGRyuq97L4Kc/6pa.zxWTskQtm06BxGrb0vbh6eodQ3dAczy","Email":"123345@gmail.com","Posts":null,"Comments":null},"PostID":4,"Post":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Title":"","Content":"","UserID":0,"User":{"ID":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","DeletedAt":null,"Username":"","Password":"","Email":"","Posts":null,"Comments":null},"Comments":null}}],"msg":"success"}%                      owen@owendeMacBook-Pro blog % curl -X GET http://localhost:9080/api/v1/posts/1/comments
+{"code":0,"data":[],"msg":"success"}%                                                                                                                                 owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
+owen@owendeMacBook-Pro blog %
