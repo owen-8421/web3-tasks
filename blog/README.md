@@ -1,4 +1,4 @@
-# **Go-Blog-Backend 个人博客系统后端**
+# **个人博客系统后端**
 
 项目采用 [Gin](https://github.com/gin-gonic/gin) 作为 Web 框架，[GORM](https://gorm.io/) 作为 ORM 库与 MySQL 数据库交互，并使用 JWT 实现用户认证。
 
