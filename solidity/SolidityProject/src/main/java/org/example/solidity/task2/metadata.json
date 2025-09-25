@@ -1,0 +1,15 @@
+{
+  "name": "My First NFT",
+  "description": "This is a description for my awesome NFT project!",
+  "image": "ipfs://bafkreignpqbmba4ewkheq6acgkmfsbn5mt5hkwjdph3aa3r2f7kdwjhhba",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Blue"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Happy"
+    }
+  ]
+}
